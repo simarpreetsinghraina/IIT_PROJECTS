@@ -1,0 +1,334 @@
+{
+  "name": "Feedback Analyzer",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "custom",
+              "cronExpression": "*/5 * * * *"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s",
+          "mode": "list",
+          "cachedResultName": "Feedbacks2 (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1570674107,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s/edit#gid=1570674107"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -128
+      ],
+      "id": "bb806d69-d05d-4222-8508-6593c9944f32",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "l0OdfXTck4Z24jJz",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s",
+          "mode": "list",
+          "cachedResultName": "Feedbacks2 (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1570674107,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s/edit#gid=1570674107"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        224,
+        -128
+      ],
+      "id": "b4103357-a4ee-4658-9faa-f26c06a8753a",
+      "name": "Get row(s) in sheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OmeJgPiGjdGoI5rI",
+          "name": "Google Sheets account preet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        448,
+        -128
+      ],
+      "id": "f579d6c2-ffe5-46f7-bd76-f290ef1ebc14",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        672,
+        -80
+      ],
+      "id": "bdd2f8ce-ef35-40b0-9869-a3b7ea95dee4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d8bd3bdb-06d9-4de4-8557-cd7468de62f2",
+              "leftValue": "={{ $json[\"feedback\"].toString() }}\n",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -272
+      ],
+      "id": "a4aff5eb-50b6-42c9-b52f-6e9d3b75785d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const rating = parseInt(item.json.feedback);\n\n  let label = \"\";\n  if (rating <= 2) label = \"Too Poor\";\n  else if (rating === 3) label = \"Moderate\";\n  else if (rating === 4) label = \"Good\";\n  else if (rating === 5) label = \"Excellent\";\n  else label = \"Invalid\";\n\n  return {\n    json: {\n      ...item.json,\n      label,\n    },\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -272
+      ],
+      "id": "c3bc9c33-8c2f-4f8e-8e8b-f3cb3fe3ad35",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s",
+          "mode": "list",
+          "cachedResultName": "Feedbacks2 (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1570674107,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YNVm09zQ6MyUnBTrAMAG2sIeUeFabX9GekXXuN8kA2s/edit#gid=1570674107"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{$json[\"row_number\"]}}",
+            "label": "={{$json[\"label\"]}}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "feedback",
+              "displayName": "feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "label",
+              "displayName": "label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1120,
+        -272
+      ],
+      "id": "a598ff9d-3960-4b2d-8be0-97784debcdf9",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OmeJgPiGjdGoI5rI",
+          "name": "Google Sheets account preet"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "04ffd1bb-f369-4830-b52d-7db438324f81",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a1d3d6ed6a5ab50bc241d577c22799d452a9c4ec4eea8ed2f58ac86d405dc90"
+  },
+  "id": "MGdzPMvifOhX8ads",
+  "tags": []
+}

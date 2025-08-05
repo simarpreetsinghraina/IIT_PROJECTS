@@ -1,0 +1,35 @@
+# 🔎 AI Browser Search Summarizer
+
+A Python-based project that uses a REAL BROWSER to search Google, scrapes the top results, and generates a concise summary using OpenAI's LLM.
+
+------------------------------------------------
+**PROJECT DESCRIPTION**
+
+**"User inputs a quer,  the agent launches a real browser, searches Google, extracts top results, and summarizes them."**
+
+This project meets all those goals using:
+-  Playwright for launching a real browser
+- BeautifulSoup for scraping readable content
+- OpenAI GPT-3.5 for summarizing top results
+
+---------------------------------------------
+
+## KEY POINT
+
+  Component              | Description 
+|			 |
+| ComputerToo            | Simulated via Python + Playwright to open and interact with real websites 
+| PlaywrightComputer     | Playwright automates a real Chromium browser 
+| Web scrapin            | BeautifulSoup extracts readable titles, links, and snippets 
+| OpenAI LLM             | GPT-3.5 Turbo model summarizes the search results 
+
+-----------------------------------------------
+
+## SETUP INSTRUCTION
+
+1. Clone the repo or open in Google Colab.
+2. Run the following installations:
+
+bash
+!pip install playwright openai beautifulsoup4 nest_asyncio
+!playwright install
